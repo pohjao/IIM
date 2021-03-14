@@ -476,7 +476,8 @@ def get_seg_model(**kwargs):
     from model.HR_Net.default import _C as hr_config
     from model.HR_Net.default import update_config
     
-    update_config(hr_config, './model/HR_Net/seg_hrnet_w48.yaml')
+    
+    (hr_config, './model/HR_Net/seg_hrnet_w48.yaml')
     model = HighResolutionNet(hr_config, **kwargs)
     from config import cfg
 

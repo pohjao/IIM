@@ -15,7 +15,7 @@ dataset = 'JHU'
 dataRoot = '../ProcessedData/' + dataset
 test_list = 'test.txt'
 
-GPU_ID = '2,3'
+GPU_ID = '0'
 os.environ["CUDA_VISIBLE_DEVICES"] = GPU_ID
 torch.backends.cudnn.benchmark = True
 
@@ -36,7 +36,9 @@ if dataset == 'QNRF':
 if dataset == 'FDST':
     mean_std = ([0.452016860247, 0.447249650955, 0.431981861591], [0.23242045939, 0.224925786257, 0.221840232611])  
 if dataset == 'JHU':
-    mean_std = ([0.429683953524, 0.437104910612, 0.421978861094], [0.235549390316, 0.232568427920, 0.2355950474739]) 
+    mean_std = ([0.429683953524, 0.437104910612, 0.421978861094], [0.235549390316, 0.232568427920, 0.2355950474739])
+if dataset == "Other":
+    mean_std = ([0.446139603853, 0.409515678883, 0.395083993673], [0.288205742836, 0.278144598007, 0.283502370119])
 
 img_transform = standard_transforms.Compose([
         standard_transforms.ToTensor(),
