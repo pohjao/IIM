@@ -1,4 +1,4 @@
-*/VisDrone2020-CC/images
-*/VisDrone2020-CC/annotations
-datasets/ProcessedData
+**/datasets/ProcessedData
 weights
+datasets/VisDrone2020-CC/sequences/*/*.jpg
+datasets/VisDrone2020-CC/annotations/*
