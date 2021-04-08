@@ -105,14 +105,14 @@ class Trainer():
             if (i + 1) % cfg.PRINT_FREQ == 0:
                 self.writer.add_scalar('train_lr1', lr1, self.i_tb)
                 self.writer.add_scalar('train_lr2', lr2, self.i_tb)
-                self.writer.add_scalar('train_loss', head_map_loss.item(), self.i_tb)
-                self.writer.add_scalar('Binar_loss', binar_map_loss.item(), self.i_tb)
+                self.writer.add_scalar('train_loss', head_map_loss, self.i_tb)
+                self.writer.add_scalar('Binar_loss', binar_map_loss, self.i_tb)
                 if len(cfg.GPU_ID)>1:
-                    self.writer.add_scalar('weight', self.net.Binar.module.weight.data.item(), self.i_tb)
-                    self.writer.add_scalar('bias', self.net.Binar.module.bias.data.item(), self.i_tb)
+                    self.writer.add_scalar('weight', self.net.Binar.module.weight.data, self.i_tb)
+                    self.writer.add_scalar('bias', self.net.Binar.module.bias.data, self.i_tb)
                 else:
-                    self.writer.add_scalar('weight', self.net.Binar.weight.data.item(), self.i_tb)
-                    self.writer.add_scalar('bias', self.net.Binar.bias.data.item(), self.i_tb)
+                    self.writer.add_scalar('weight', self.net.Binar.weight.data, self.i_tb)
+                    self.writer.add_scalar('bias', self.net.Binar.bias.data, self.i_tb)
 
                 self.timer['iter time'].toc(average=False)
                 print( '[ep %d][it %d][loss %.4f][lr1 %.4f][lr2 %.4f][%.2fs]' % \
