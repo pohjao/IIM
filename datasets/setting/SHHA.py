@@ -19,6 +19,6 @@ __C_SHHA.LABEL_FACTOR = 1
 __C_SHHA.LOG_PARA = 1.
 
 __C_SHHA.RESUME_MODEL = ''#model path
-__C_SHHA.TRAIN_BATCH_SIZE = 6 #imgs
+__C_SHHA.TRAIN_BATCH_SIZE = 4 #imgs
 
 __C_SHHA.VAL_BATCH_SIZE = 1 # must be 1

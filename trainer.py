@@ -11,6 +11,7 @@ import datasets
 import cv2
 from tqdm import tqdm
 from misc.compute_metric import eval_metrics
+#import wandb
 
 class Trainer():
     def __init__(self, cfg_data, pwd):
@@ -79,7 +80,7 @@ class Trainer():
 
     def train(self): # training for all datasets
         self.net.train()
-
+        #wandb.init("IIM", sync_tensorboard = True)
         for i, data in enumerate(self.train_loader, 0):
             self.i_tb+=1
             self.timer['iter time'].tic()

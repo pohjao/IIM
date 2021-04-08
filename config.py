@@ -14,12 +14,13 @@ __C.DATASET = 'VISDRONE'  # dataset selection: NWPU, SHHA, SHHB, QNRF, FDST
 
 __C.NET = 'HR_Net' #  optional ['HR_Net', 'VGG16_FPN']
 
-__C.PRE_HR_WEIGHTS = './weights/hrnetv2_w48_imagenet_pretrained.pth'
+#__C.PRE_HR_WEIGHTS = './weights/hrnetv2_w48_imagenet_pretrained.pth'
+__C.PRE_HR_WEIGHTS = './weights/NWPU-HR-ep_241_F1_0.802_Pre_0.841_Rec_0.766_mae_55.6_mse_330.9.pth'
 
 __C.RESUME = False  # contine training
-__C.RESUME_PATH = './exp/12-28_16-21_QNRF_HR_Net/latest_state.pth'
+__C.RESUME_PATH = './weights/NWPU-HR-ep_241_F1_0.802_Pre_0.841_Rec_0.766_mae_55.6_mse_330.9.pth'
 
-__C.GPU_ID = '2,3'  # sigle gpu: [0], [1] ...; multi gpus: [0,1]
+__C.GPU_ID = '0'  # sigle gpu: [0], [1] ...; multi gpus: [0,1]
 
 __C.OPT = 'Adam'  #'Adam'
 # learning rate settings
@@ -29,7 +30,6 @@ if __C.OPT == 'Adam':
 __C.LR_DECAY = 0.99 # no use 
 __C.NUM_EPOCH_LR_DECAY = 4 # no use 
 __C.LR_DECAY_START = 10 # no use 
-
 
 __C.MAX_EPOCH = 600
 __C.PRINT_FREQ = 20
