@@ -259,6 +259,7 @@ class HighResolutionNet(nn.Module):
 
     def __init__(self, config, **kwargs):
         extra = config.MODEL.EXTRA
+        print(config)
         super(HighResolutionNet, self).__init__()
 
         # stem net
@@ -477,7 +478,7 @@ def get_seg_model(**kwargs):
     from model.HR_Net.default import update_config
     
     
-    (hr_config, './model/HR_Net/seg_hrnet_w48.yaml')
+    update_config(hr_config, './model/HR_Net/seg_hrnet_w48.yaml')
     model = HighResolutionNet(hr_config, **kwargs)
     from config import cfg
 

@@ -10,3 +10,4 @@ scipy
 opencv-python
 pyyaml
 yacs
+wandb

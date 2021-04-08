@@ -2,3 +2,5 @@
 weights
 datasets/VisDrone2020-CC/sequences/*/*.jpg
 datasets/VisDrone2020-CC/annotations/*
+**/__pycache__
+exp
