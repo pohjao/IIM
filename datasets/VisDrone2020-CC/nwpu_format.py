@@ -91,6 +91,8 @@ with open("bbox_size.csv",'r') as bbfile:
 
 ### Handle sequences ###
 sequences = os.listdir("sequences")
+val_sequences = random.choices(sequences, k=int(len(sequences)*val_portion))
+
 for sequence in sequences:
     images = os.listdir(os.path.join("sequences",sequence))
     annotation_path = os.path.join("annotations", f"{sequence}.txt")
@@ -110,7 +112,6 @@ for sequence in sequences:
         points.append((width, height))
         annotations[image_idx] = points
     
-    val_images = random.choices(images, k=int(len(images)*val_portion))
     for image_name in images:
         meta = {}
         exported_image_name = f"{sequence}_{image_name}"
@@ -128,7 +129,7 @@ for sequence in sequences:
         with open(os.path.join(jsons_export_path, exported_image_name.replace(".jpg",".json")), 'w') as json_file:
             json.dump(meta, json_file)
 
-        if image_name in val_images:
+        if sequence in val_sequences:
             with open(gt_file_path, "a+") as gt_file:
                 row = " ".join(create_gt_loc(meta))
                 row += "\n"
