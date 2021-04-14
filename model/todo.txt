@@ -1,3 +1,4 @@
+-Datan normalisointi!
 -Mappaa jokaiselle epochille binary map. Onko Nan? Muistaakseni alkupäässä oli != 0 binarymappeja.
     -laske reilusti rajaa validoinnille, vaikka > 5 epoch
     -röjöhtöökö binarymodule? Voisi mäpätä parametrit koulutuksen aikana.
