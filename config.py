@@ -15,10 +15,11 @@ __C.DATASET = 'VISDRONE'  # dataset selection: NWPU, SHHA, SHHB, QNRF, FDST
 __C.NET = 'HR_Net' #  optional ['HR_Net', 'VGG16_FPN']
 
 #__C.PRE_HR_WEIGHTS = './weights/hrnetv2_w48_imagenet_pretrained.pth'
-__C.PRE_HR_WEIGHTS = './weights/NWPU-HR-ep_241_F1_0.802_Pre_0.841_Rec_0.766_mae_55.6_mse_330.9.pth'
+#__C.PRE_HR_WEIGHTS = './weights/NWPU-HR-ep_241_F1_0.802_Pre_0.841_Rec_0.766_mae_55.6_mse_330.9.pth'
+__C.PRE_HR_WEIGHTS = './exp/04-12_07-37_VISDRONE_HR_Net/ep_25_F1_0.000_Pre_0.000_Rec_0.000_mae_167.4_mse_183.2.pth'
 
-__C.RESUME = False  # contine training
-__C.RESUME_PATH = './weights/NWPU-HR-ep_241_F1_0.802_Pre_0.841_Rec_0.766_mae_55.6_mse_330.9.pth'
+__C.RESUME = True  # contine training
+__C.RESUME_PATH = './exp/04-12_07-37_VISDRONE_HR_Net/latest_state.pth'
 
 __C.GPU_ID = '0'  # sigle gpu: [0], [1] ...; multi gpus: [0,1]
 

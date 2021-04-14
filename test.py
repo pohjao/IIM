@@ -3,6 +3,7 @@ import torch
 import torch.nn.functional as F
 from torch.autograd import Variable
 import torchvision.transforms as standard_transforms
+from torchvision.transforms.transforms import Resize
 import misc.transforms as own_transforms
 import tqdm
 from model.locator import Crowd_locator
@@ -11,21 +12,25 @@ from PIL import Image, ImageOps
 import  cv2 
 from collections import OrderedDict
 
-dataset = 'JHU'
-dataRoot = '../ProcessedData/' + dataset
-test_list = 'test.txt'
+dataset = 'VisDrone'
+dataRoot = './datasets/ProcessedData/' + dataset
+test_list = 'val.txt'
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-GPU_ID = '0'
-os.environ["CUDA_VISIBLE_DEVICES"] = GPU_ID
-torch.backends.cudnn.benchmark = True
+#GPU_ID = '0'
+GPU_ID = "CPU"
+
+if GPU_ID != "CPU":
+    os.environ["CUDA_VISIBLE_DEVICES"] = GPU_ID
+    torch.backends.cudnn.benchmark = True
 
 netName = 'HR_Net' # options: HR_Net,VGG16_FPN
-model_path = './exp/01-03_13-54_JHU_HR_Net/ep_305_F1_0.676_Pre_0.764_Rec_0.607_mae_74.5_mse_332.6.pth'
+model_path = './exp/04-12_07-37_VISDRONE_HR_Net/ep_25_F1_0.000_Pre_0.000_Rec_0.000_mae_167.4_mse_183.2.pth'
 
 out_file_name= './saved_exp_results/' + dataset + '_' + netName + '_' + test_list
 
 
-if dataset == 'NWPU':
+if dataset == 'NWPU' or dataset == "VisDrone":
     mean_std = ([0.446139603853, 0.409515678883, 0.395083993673], [0.288205742836, 0.278144598007, 0.283502370119])
 if dataset == 'SHHA':
     mean_std = ([0.410824894905, 0.370634973049, 0.359682112932], [0.278580576181, 0.26925137639, 0.27156367898])
@@ -42,6 +47,7 @@ if dataset == "Other":
 
 img_transform = standard_transforms.Compose([
         standard_transforms.ToTensor(),
+        #standard_transforms.Resize(size=[512,1024]),
         standard_transforms.Normalize(*mean_std)
     ])
 restore = standard_transforms.Compose([
@@ -72,10 +78,13 @@ def get_boxInfo_from_Binar_map(Binar_numpy, min_area=3):
 
 
 def test(file_list, model_path):
-
     net = Crowd_locator(netName,GPU_ID,pretrained=True)
-    net.cuda()
-    state_dict = torch.load(model_path)
+    net.to(device=device)
+    if GPU_ID == "CPU":
+        state_dict = torch.load(model_path, map_location = torch.device("cpu"))
+    else:
+        state_dict = torch.load(model_path)
+
     if len(GPU_ID.split(','))>1:
         net.load_state_dict(state_dict)
     else:
@@ -89,8 +98,8 @@ def test(file_list, model_path):
     gts = []
     preds = []
 
-    file_list = tqdm.tqdm(file_list)
-    for infos in file_list:
+    #file_list = tqdm.tqdm(file_list)
+    for infos in [file_list[0]]:
         filename = infos.split()[0]
 
         imgname = os.path.join(dataRoot, 'images', filename + '.jpg')
@@ -102,7 +111,8 @@ def test(file_list, model_path):
         slice_h, slice_w = 512,1024
         slice_h, slice_w = slice_h, slice_w
         with torch.no_grad():
-            img = Variable(img).cuda()
+            img = Variable(img)
+            img = img.to(device=device)
             b, c, h, w = img.shape
             crop_imgs, crop_dots, crop_masks = [], [], []
             if h * w < slice_h * 2 * slice_w * 2 and h % 16 == 0 and w % 16 == 0:

@@ -62,10 +62,12 @@ def createValData(datasetname, Dataset, cfg_data):
 
     img_transform = standard_transforms.Compose([
         standard_transforms.ToTensor(),
+        standard_transforms.Resize((512,1024)),
         standard_transforms.Normalize(*cfg_data.MEAN_STD)
     ])
     mask_transform = standard_transforms.Compose([
-        standard_transforms.ToTensor()
+        standard_transforms.ToTensor(),
+        standard_transforms.Resize((512,1024), interpolation=0),
 
     ])
 
@@ -76,7 +78,7 @@ def createValData(datasetname, Dataset, cfg_data):
     )
 
     if datasetname in ['SHHA', 'SHHB' , 'QNRF', 'JHU', 'NWPU', 'VISDRONE']:
-        return DataLoader(val_set, batch_size=cfg_data.VAL_BATCH_SIZE, num_workers=6, shuffle=True, drop_last=True)
+        return DataLoader(val_set, batch_size=cfg_data.VAL_BATCH_SIZE, num_workers=0, shuffle=True, drop_last=True)
     elif datasetname in ['FDST']:
         val_sampler = RandomSampler(data_source=val_set, replacement=True,  num_samples=200)
         return DataLoader(val_set, batch_size=cfg_data.VAL_BATCH_SIZE, sampler=val_sampler, num_workers=6, drop_last=True)

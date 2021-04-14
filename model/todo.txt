@@ -1,0 +1,3 @@
+-Mappaa jokaiselle epochille binary map. Onko Nan? Muistaakseni alkupäässä oli != 0 binarymappeja.
+    -laske reilusti rajaa validoinnille, vaikka > 5 epoch
+-Visualisoi normalisoidut kuvat, onko jotain epänormaalia?

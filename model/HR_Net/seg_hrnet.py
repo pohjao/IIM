@@ -22,6 +22,7 @@ import torch.nn.functional as F
 BatchNorm2d = nn.BatchNorm2d
 BN_MOMENTUM = 0.01
 logger = logging.getLogger(__name__)
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 
 def conv3x3(in_planes, out_planes, stride=1):
@@ -463,7 +464,7 @@ class HighResolutionNet(nn.Module):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
         if os.path.isfile(pretrained):
-            pretrained_dict = torch.load(pretrained)
+            pretrained_dict = torch.load(pretrained, map_location = device)
             logger.info('=> loading pretrained model {}'.format(pretrained))
             model_dict = self.state_dict()
             pretrained_dict = {k: v for k, v in pretrained_dict.items()

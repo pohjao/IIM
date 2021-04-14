@@ -13,6 +13,8 @@ from tqdm import tqdm
 from misc.compute_metric import eval_metrics
 #import wandb
 
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
 class Trainer():
     def __init__(self, cfg_data, pwd):
 
@@ -41,7 +43,7 @@ class Trainer():
 
 
         if cfg.RESUME:
-            latest_state = torch.load(cfg.RESUME_PATH)
+            latest_state = torch.load(cfg.RESUME_PATH, map_location=device)
             self.net.load_state_dict(latest_state['net'])
             self.optimizer.load_state_dict(latest_state['optimizer'])
             self.scheduler.load_state_dict(latest_state['scheduler'])
@@ -52,8 +54,9 @@ class Trainer():
             self.exp_path = latest_state['exp_path']
             self.exp_name = latest_state['exp_name']
             print("Finish loading resume mode")
-        self.writer, self.log_txt = logger(self.exp_path, self.exp_name, self.pwd, ['exp','figure','img', 'vis'], resume=cfg.RESUME)
 
+        #self.writer, self.log_txt = logger(self.exp_path, self.exp_name, self.pwd, ['exp','figure','img', 'vis'], resume=cfg.RESUME)
+        self.writer, self.log_txt = logger(self.exp_path, "DEBUG", self.pwd, ['exp','figure','img', 'vis'], resume=cfg.RESUME)
 
     def forward(self):
         # self.validate()
@@ -86,8 +89,8 @@ class Trainer():
             self.timer['iter time'].tic()
             img, gt_map = data
 
-            img = Variable(img).cuda()
-            gt_map = Variable(gt_map).cuda()
+            img = Variable(img).to(device=device)
+            gt_map = Variable(gt_map).to(device=device)
 
             self.optimizer.zero_grad()
             threshold_matrix, pre_map, binar_map = self.net(img,gt_map)
@@ -158,8 +161,8 @@ class Trainer():
             slice_h, slice_w = self.cfg_data.TRAIN_SIZE
 
             with torch.no_grad():
-                img = Variable(img).cuda()
-                dot_map = Variable(dot_map).cuda()
+                img = Variable(img).to(device=device)
+                dot_map = Variable(dot_map).to(device=device)
                 # crop the img and gt_map with a max stride on x and y axis
                 # size: HW: __C_NWPU.TRAIN_SIZE
                 # stack them with a the batchsize: __C_NWPU.TRAIN_BATCH_SIZE
@@ -167,7 +170,7 @@ class Trainer():
                 b, c, h, w = img.shape
 
                 if h*w< slice_h*2*slice_w*2 and h%16 == 0 and w %16 == 0:
-                    [pred_threshold, pred_map, __]= [i.cpu() for i in self.net(img, mask_gt=None, mode = 'val')]
+                    [pred_threshold, pred_map, debug_binarmap]= [i.cpu() for i in self.net(img, mask_gt=None, mode = 'val')]
                 else:
                     if h % 16 !=0:
                         pad_dims = (0,0, 0,16-h%16)
@@ -223,10 +226,15 @@ class Trainer():
                     pred_map = (pred_map / mask)
                     pred_threshold = (pred_threshold/mask)
 
-                # binar_map = self.net.Binar(pred_map.cuda(), pred_threshold.cuda()).cpu()
+                #binar_map = self.net.Binar(pred_map.to(device=device), pred_threshold.to(device=device)).cpu()
                 a = torch.ones_like(pred_map)
                 b = torch.zeros_like(pred_map)
-                binar_map = torch.where(pred_map >= pred_threshold, a, b)
+                #binar_map = torch.where(pred_map >= pred_threshold, a, b)
+                mean = torch.mean(pred_map)
+                binar_map = torch.where(pred_map >= torch.max(pred_map)*0.5, a, b)
+                debug_binar_max = torch.max(debug_binarmap)
+                pred_max = torch.max(pred_map)
+                thres_max = torch.max(pred_threshold)
 
                 dot_map = dot_map.cpu()
                 loss = F.mse_loss(pred_map, dot_map)
@@ -265,6 +273,7 @@ class Trainer():
                     vis_results(self.exp_name, self.epoch, self.writer, self.restore_transform, img,
                                 pred_map.numpy(), dot_map.numpy(),binar_map,
                                 pred_threshold.numpy(),boxes)
+                break
 
         ap_s = metrics_s['tp'].sum / (metrics_s['tp'].sum + metrics_s['fp'].sum + 1e-20)
         ar_s = metrics_s['tp'].sum / (metrics_s['tp'].sum + metrics_s['fn'].sum + 1e-20)
@@ -292,6 +301,6 @@ class Trainer():
         self.writer.add_scalar('overall_mse', mse, self.epoch + 1)
         self.writer.add_scalar('overall_nae', nae, self.epoch + 1)
 
-        self.train_record = update_model(self, [f1m_l, ap_l, ar_l,mae, mse, nae, loss])
+        #self.train_record = update_model(self, [f1m_l, ap_l, ar_l,mae, mse, nae, loss])
 
         print_NWPU_summary(self,[f1m_l, ap_l, ar_l,mae, mse, nae, loss])
