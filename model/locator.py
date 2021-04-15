@@ -10,7 +10,7 @@ from torchvision import models
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 class Crowd_locator(nn.Module):
-    def __init__(self, net_name, gpu_id, pretrained=True):
+    def __init__(self, net_name, gpu_id, pretrained=True, writer=None):
         super(Crowd_locator, self).__init__()
 
         if net_name == 'HR_Net':
@@ -31,6 +31,7 @@ class Crowd_locator(nn.Module):
             self.Binar = self.Binar.to(device=device)
 
         self.loss_BCE = nn.BCELoss().to(device=device)
+        self.writer = writer
 
     @property
     def loss(self):
@@ -41,6 +42,18 @@ class Crowd_locator(nn.Module):
         feature, pre_map = self.Extractor(img)
 
         threshold_matrix, binar_map = self.Binar(feature,pre_map)
+
+        self.writer.add_scalar('threshold_mat', {
+            "min": torch.min(threshold_matrix),
+            "mean": torch.mean(threshold_matrix),
+            "max": torch.max(threshold_matrix)
+        })
+
+        self.writer.add_scalar('binar_map', {
+            "min": torch.min(binar_map),
+            "mean": torch.mean(binar_map),
+            "max": torch.max(binar_map)
+        })
 
         if mode == 'train':
         # weight = torch.ones_like(binar_map).to(device=device)

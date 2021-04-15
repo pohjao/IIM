@@ -62,13 +62,12 @@ def createValData(datasetname, Dataset, cfg_data):
 
     img_transform = standard_transforms.Compose([
         standard_transforms.ToTensor(),
-        standard_transforms.Resize((512,1024)),
+        #standard_transforms.Resize((512,1024)),
         standard_transforms.Normalize(*cfg_data.MEAN_STD)
     ])
     mask_transform = standard_transforms.Compose([
         standard_transforms.ToTensor(),
-        standard_transforms.Resize((512,1024), interpolation=0),
-
+        #standard_transforms.Resize((512,1024), interpolation=0),
     ])
 
     val_set = Dataset(datasetname, 'val',

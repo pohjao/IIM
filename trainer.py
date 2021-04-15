@@ -55,11 +55,10 @@ class Trainer():
             self.exp_name = latest_state['exp_name']
             print("Finish loading resume mode")
 
-        #self.writer, self.log_txt = logger(self.exp_path, self.exp_name, self.pwd, ['exp','figure','img', 'vis'], resume=cfg.RESUME)
-        self.writer, self.log_txt = logger(self.exp_path, "DEBUG", self.pwd, ['exp','figure','img', 'vis'], resume=cfg.RESUME)
+        self.writer, self.log_txt = logger(self.exp_path, self.exp_name, self.pwd, ['exp','figure','img', 'vis'], resume=cfg.RESUME)
+        #self.writer, self.log_txt = logger(self.exp_path, "DEBUG", self.pwd, ['exp','figure','img', 'vis'], resume=cfg.RESUME)
 
     def forward(self):
-        # self.validate()
         for epoch in range(self.epoch,cfg.MAX_EPOCH):
             self.epoch = epoch
             # training    
@@ -230,11 +229,7 @@ class Trainer():
                 a = torch.ones_like(pred_map)
                 b = torch.zeros_like(pred_map)
                 #binar_map = torch.where(pred_map >= pred_threshold, a, b)
-                mean = torch.mean(pred_map)
                 binar_map = torch.where(pred_map >= torch.max(pred_map)*0.5, a, b)
-                debug_binar_max = torch.max(debug_binarmap)
-                pred_max = torch.max(pred_map)
-                thres_max = torch.max(pred_threshold)
 
                 dot_map = dot_map.cpu()
                 loss = F.mse_loss(pred_map, dot_map)
@@ -273,7 +268,6 @@ class Trainer():
                     vis_results(self.exp_name, self.epoch, self.writer, self.restore_transform, img,
                                 pred_map.numpy(), dot_map.numpy(),binar_map,
                                 pred_threshold.numpy(),boxes)
-                break
 
         ap_s = metrics_s['tp'].sum / (metrics_s['tp'].sum + metrics_s['fp'].sum + 1e-20)
         ar_s = metrics_s['tp'].sum / (metrics_s['tp'].sum + metrics_s['fn'].sum + 1e-20)
@@ -301,6 +295,6 @@ class Trainer():
         self.writer.add_scalar('overall_mse', mse, self.epoch + 1)
         self.writer.add_scalar('overall_nae', nae, self.epoch + 1)
 
-        #self.train_record = update_model(self, [f1m_l, ap_l, ar_l,mae, mse, nae, loss])
+        self.train_record = update_model(self, [f1m_l, ap_l, ar_l,mae, mse, nae, loss])
 
         print_NWPU_summary(self,[f1m_l, ap_l, ar_l,mae, mse, nae, loss])
