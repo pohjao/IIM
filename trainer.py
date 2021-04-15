@@ -57,6 +57,8 @@ class Trainer():
 
         self.writer, self.log_txt = logger(self.exp_path, self.exp_name, self.pwd, ['exp','figure','img', 'vis'], resume=cfg.RESUME)
         #self.writer, self.log_txt = logger(self.exp_path, "DEBUG", self.pwd, ['exp','figure','img', 'vis'], resume=cfg.RESUME)
+        self.net.add_writer(self.writer)
+
 
     def forward(self):
         for epoch in range(self.epoch,cfg.MAX_EPOCH):

@@ -21,8 +21,8 @@ __C.PRE_HR_WEIGHTS = './weights/NWPU-HR-ep_241_F1_0.802_Pre_0.841_Rec_0.766_mae_
 __C.RESUME = False  # contine training
 __C.RESUME_PATH = './exp/04-12_07-37_VISDRONE_HR_Net/latest_state.pth'
 
-#__C.GPU_ID = '0'  # sigle gpu: [0], [1] ...; multi gpus: [0,1]
-__C.GPU_ID = 'CPU'
+__C.GPU_ID = '0'  # sigle gpu: [0], [1] ...; multi gpus: [0,1]
+#__C.GPU_ID = 'CPU'
 
 __C.OPT = 'Adam'  #'Adam'
 # learning rate settings
