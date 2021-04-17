@@ -57,7 +57,6 @@ class Trainer():
 
         self.writer, self.log_txt = logger(self.exp_path, self.exp_name, self.pwd, ['exp','figure','img', 'vis'], resume=cfg.RESUME)
         #self.writer, self.log_txt = logger(self.exp_path, "DEBUG", self.pwd, ['exp','figure','img', 'vis'], resume=cfg.RESUME)
-        self.net.add_writer(self.writer)
 
 
     def forward(self):
@@ -112,6 +111,17 @@ class Trainer():
                 self.writer.add_scalar('train_lr2', lr2, self.i_tb)
                 self.writer.add_scalar('train_loss', head_map_loss, self.i_tb)
                 self.writer.add_scalar('Binar_loss', binar_map_loss, self.i_tb)
+                self.writer.add_scalars('threshold_mat',{
+                    "min": torch.min(threshold_matrix),
+                    "mean": torch.mean(threshold_matrix),
+                    "max": torch.max(threshold_matrix)
+                }, self.i_tb)
+
+                self.writer.add_scalars('binar_map', {
+                    "min": torch.min(binar_map),
+                    "mean": torch.mean(binar_map),
+                    "max": torch.max(binar_map)
+                }, self.i_tb)
                 if len(cfg.GPU_ID)>1:
                     self.writer.add_scalar('weight', self.net.Binar.module.weight.data, self.i_tb)
                     self.writer.add_scalar('bias', self.net.Binar.module.bias.data, self.i_tb)

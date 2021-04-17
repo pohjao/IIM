@@ -31,33 +31,22 @@ class Crowd_locator(nn.Module):
             self.Binar = self.Binar.to(device=device)
 
         self.loss_BCE = nn.BCELoss().to(device=device)
-        self.writer = writer
-
-    def add_writer(self, writer):
-        self.writer = writer
 
     @property
     def loss(self):
         return  self.head_map_loss, self.binar_map_loss
 
     def forward(self, img, mask_gt, mode = 'train'):
-        # print(size_map_gt.max())
         feature, pre_map = self.Extractor(img)
-
+        # print("feature:")
+        # print(feature)
+        # print("pre_map:")
+        # print(pre_map)
         threshold_matrix, binar_map = self.Binar(feature,pre_map)
-
-        if self.writer is not None:
-            self.writer.add_scalars('threshold_mat', {
-                "min": torch.min(threshold_matrix),
-                "mean": torch.mean(threshold_matrix),
-                "max": torch.max(threshold_matrix)
-            })
-
-            self.writer.add_scalars('binar_map', {
-                "min": torch.min(binar_map),
-                "mean": torch.mean(binar_map),
-                "max": torch.max(binar_map)
-            })
+        # print("threshold")
+        # print(threshold_matrix)
+        # print("binar_map")
+        # print(binar_map)            
 
         if mode == 'train':
         # weight = torch.ones_like(binar_map).to(device=device)

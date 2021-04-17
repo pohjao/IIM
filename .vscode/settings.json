@@ -4,5 +4,5 @@
         "titleBar.activeBackground": "#103E81",
         "titleBar.activeForeground": "#F7FAFE"
     },
-    "python.pythonPath": "/Users/pohjao/.pyenv/versions/3.7.9/bin/python"
+    "python.pythonPath": "/home/ubuntu/anaconda3/bin/python"
 }

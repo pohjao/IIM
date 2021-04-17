@@ -63,8 +63,7 @@ class BinarizedModule(nn.Module):
     self.bias = nn.Parameter(torch.Tensor(1).fill_(0), requires_grad=True)
 
   def forward(self,feature, pred_map):
-
-
+    
     p = F.interpolate(pred_map.detach(), scale_factor=0.125)
     f = F.interpolate(feature.detach(), scale_factor=0.5)
     # import pdb
