@@ -21,7 +21,7 @@ __C.PRE_HR_WEIGHTS = './weights/hrnetv2_w48_imagenet_pretrained.pth'
 __C.RESUME = False  # contine training
 __C.RESUME_PATH = './exp/04-15_20-08_VISDRONE_HR_Net/latest_state.pth'
 
-__C.GPU_ID = '0'  # sigle gpu: [0], [1] ...; multi gpus: [0,1]
+__C.GPU_ID = [0]  # sigle gpu: [0], [1] ...; multi gpus: [0,1]
 #__C.GPU_ID = 'CPU'
 
 __C.OPT = 'Adam'  #'Adam'

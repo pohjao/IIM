@@ -240,8 +240,8 @@ class Trainer():
                 #binar_map = self.net.Binar(pred_map.to(device=device), pred_threshold.to(device=device)).cpu()
                 a = torch.ones_like(pred_map)
                 b = torch.zeros_like(pred_map)
-                #binar_map = torch.where(pred_map >= pred_threshold, a, b)
-                binar_map = torch.where(pred_map >= torch.max(pred_map)*0.5, a, b)
+                binar_map = torch.where(pred_map >= pred_threshold, a, b)
+                #binar_map = torch.where(pred_map >= torch.max(pred_map)*0.5, a, b)
 
                 dot_map = dot_map.cpu()
                 loss = F.mse_loss(pred_map, dot_map)

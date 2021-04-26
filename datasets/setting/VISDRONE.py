@@ -6,8 +6,8 @@ __C_VISDRONE = edict()
 
 cfg_data = __C_VISDRONE
 
-__C_VISDRONE.TRAIN_SIZE = (1080,1920)
-#__C_VISDRONE.TRAIN_SIZE = (512,1024)
+#__C_VISDRONE.TRAIN_SIZE = (1080,1920)
+__C_VISDRONE.TRAIN_SIZE = (512,1024)
 __C_VISDRONE.DATA_PATH = './datasets/ProcessedData/VisDrone/'
 __C_VISDRONE.TRAIN_LST = 'train.txt'
 __C_VISDRONE.VAL_LST =  'val.txt'

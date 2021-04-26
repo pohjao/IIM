@@ -17,8 +17,8 @@ dataRoot = './datasets/ProcessedData/' + dataset
 test_list = 'val.txt'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-#GPU_ID = '0'
-GPU_ID = "CPU"
+GPU_ID = '0'
+
 
 if GPU_ID != "CPU":
     os.environ["CUDA_VISIBLE_DEVICES"] = GPU_ID

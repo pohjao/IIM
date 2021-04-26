@@ -8,7 +8,7 @@ from model.PBM import BinarizedModule
 from torchvision import models
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-
+print(f"Locator device: ${device}")
 class Crowd_locator(nn.Module):
     def __init__(self, net_name, gpu_id, pretrained=True, writer=None):
         super(Crowd_locator, self).__init__()
